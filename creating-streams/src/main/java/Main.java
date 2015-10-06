@@ -16,12 +16,27 @@ import java.util.concurrent.Executors;
 public class Main {
 
     public static void main(String[] args) {
+        print(rangeStream(0, 4), "rangeStream");
+        print(concatStream(), "concatStream");
+        print(prependToStream(), "prependToStream");
         print(repeatCountTimesStreamBlocking(), "repeatingEventsBlocking");
         print(repeatCountTimesStreamAsync(), "repeatingEventsNonBlocking");
     }
 
+    private static Observable<String> prependToStream() {
+        return rangeStream(0, 5).startWith(rangeStream(-100, 3));
+    }
+
+    private static Observable<String> concatStream() {
+        return Observable.concat(rangeStream(0, 4), rangeStream(4, 6));
+    }
+
     private static Observable<String> repeatCountTimesStreamBlocking() {
         return Observable.just("hello").repeat(5);
+    }
+
+    private static Observable<String> rangeStream(int from, int to) {
+        return Observable.range(from, to).map(Object::toString);
     }
 
     private static Observable<String> repeatCountTimesStreamAsync() {
